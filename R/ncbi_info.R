@@ -67,3 +67,13 @@ fetch_genome <- function(assembly, out_file) {
 
 
 
+# Download mitogenome sequence
+fetch_mitogenome <- function(accession, out_file) {
+  mitogenome_id  <- entrez_search(db = "nuccore", term = accession)$ids
+  mitogenome_rec <- entrez_fetch(db = "nuccore", id = mitogenome_id, rettype = "fasta")
+
+  cat(mitogenome_rec, file = out_file, append = FALSE)
+}
+
+
+

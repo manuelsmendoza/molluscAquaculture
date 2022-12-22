@@ -9,7 +9,7 @@ extract_accession <- function(sequence_id) {
 
 
 # Extract NCBI information about a specie
-search_info <- function(sp_name) {
+genomic_info <- function(sp_name) {
   # Search for SRA accessions
   sra_nacc <- entrez_search(db = "sra", term = paste0(sp_name, "[ORGN]"), retmax = 10000)$count
 
@@ -51,3 +51,19 @@ search_info <- function(sp_name) {
 
   return(sp_info)
 }
+
+
+
+# Download genome sequence
+fetch_genome <- function(assembly, out_file) {
+  assembly_id   <- entrez_search(db = "assembly", term = assembly)$ids
+  assembly_accs <- entrez_link(dbfrom = "assembly", db = "nuccore", id = assembly_id)$links["assembly_nuccore"][[1]]
+
+  for (CHR in assembly_accs) {
+    rec <- entrez_fetch(db = "nuccore", id = CHR, rettype = "fasta")
+    cat(rec, file = out_file, append = TRUE)
+  }
+}
+
+
+
